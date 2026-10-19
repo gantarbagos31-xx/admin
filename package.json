@@ -1,10 +1,16 @@
 {
-  "name": "mig33reborn-room-moderator",
-  "version": "1.0.0",
+  "name": "mig33reborn-room-moderator-single",
+  "version": "1.1.0",
   "private": true,
-  "description": "HTML frontend and Node.js WebSocket proxy",
+  "description": "Single-file Node.js app with embedded HTML frontend and WebSocket proxy",
   "main": "server.js",
-  "scripts": {"start": "node server.js"},
-  "dependencies": {"ws": "^8.18.0"},
-  "engines": {"node": ">=18"}
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }
