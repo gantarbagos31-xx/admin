@@ -42,3 +42,10 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Auto Kick aktif secara default dan mengirim teks `/kick username` lewat `room.send_message`, satu target per detik. Tidak ada konfirmasi manual pada setiap target; server tetap memeriksa dukungan command dan hak moderator.
 - Target tetap berada di daftar sampai aplikasi menerima indikator konfirmasi kick; pengiriman teks saja tidak dianggap sukses.
 - Pengiriman command membutuhkan permission `messaging.send`; keberhasilan tetap bergantung pada dukungan command `/kick` dan hak moderator yang berlaku di server.
+
+## Perilaku Auto Kick terbaru
+- Auto Kick ON: username yang terdeteksi baru masuk room dijadwalkan untuk mengirim teks `/kick username`.
+- Auto Kick OFF maupun ON: ketika List Target berisi lebih dari satu username, seluruh target diantrekan otomatis.
+- Delay Antar Kick mengatur jarak pengiriman perintah berikutnya.
+- Perintah dikirim melalui `room.send_message`; keberhasilan tetap bergantung pada dukungan command `/kick` dan izin moderator di server.
+- Target tidak dihapus hanya karena perintah terkirim; penghapusan memerlukan indikasi konfirmasi kick yang dikenali aplikasi.
