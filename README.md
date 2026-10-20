@@ -11,3 +11,8 @@ Backend Node.js dan frontend HTML sudah digabung dalam `server.js`.
 Opsional: atur URL WebSocket upstream dengan environment variable `MIG33_WS_URL`, dan port dengan `PORT`.
 
 Daftar peserta bergantung pada format respons API upstream; protokol upstream belum diuji langsung. Gunakan HTTPS/WSS bila dipublikasikan melalui internet.
+
+## Perubahan auto-refresh dan Auto Kick
+- Event `room.joined` dengan teks `has entered` memicu permintaan `room.participants` otomatis.
+- Checkbox Auto Kick mengirim `room.kick` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
+- Format payload event upstream dapat berbeda; verifikasi bentuk event dan respons `room.participants` pada log sebelum penggunaan.
