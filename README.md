@@ -14,7 +14,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 
 ## Perubahan auto-refresh dan Auto Kick
 - Event `room.joined` dengan teks `has entered` memicu permintaan `room.participants` otomatis.
-- Checkbox Auto Kick mengirim `room.kick` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
+- Checkbox Auto Kick mengirim `room.kick.vote` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
 - Format payload event upstream dapat berbeda; verifikasi bentuk event dan respons `room.participants` pada log sebelum penggunaan.
 
 
@@ -24,13 +24,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Log ROOM JOIN MATCH mencatat sumber username untuk memudahkan diagnosis.
 
 
-## Metode kick teks (/kick username)
-- Tombol moderasi dan Auto Kick mengirim `room.send_message` dengan `message: "/kick username"` ke room aktif.
-- Backend mengizinkan `room.send_message` pada proxy.
-- Aplikasi hanya mengirim teks perintah; server upstream harus mendukung `/kick` dan mengizinkannya untuk moderator. Keberhasilan tidak dijamin sampai respons/event server mengonfirmasi.
-- Jalur JSON `room.kick` tidak lagi dipakai oleh tombol kick maupun Auto Kick.
-
-
-## Catatan `room.kick.state` (eksperimental)
-
-Tombol Kick dan Auto Kick sekarang mengirim payload `{"type":"room.kick.state","room":"nama-room","target_username":"username"}`. Tipe `room.kick.state` belum tercantum dalam dokumentasi publik API yang diperiksa; implementasi ini hanya mengirim tipe yang diminta dan tidak menjamin server mengenalinya. Periksa respons upstream untuk mengetahui apakah diterima atau ditolak.
+## Metode kick percobaan (`room.kick.vote`)
+- Tombol moderasi dan Auto Kick mengirim payload `{"type":"room.kick.vote","room":"nama-room","target_username":"username"}`.
+- `room.kick.vote` belum terkonfirmasi didukung dokumentasi; jika server mengembalikan `unsupported_type`, tipe ini tidak didukung. Jangan anggap queued sebagai bukti kick berhasil; respons queued bukan bukti bahwa target berhasil dikeluarkan. Periksa hasil job dan nilai `result.status` / `kicked`.
+- Jika server menolak karena kredit tidak cukup, aplikasi tidak melewati pemeriksaan kredit.
