@@ -14,7 +14,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 
 ## Perubahan auto-refresh dan Auto Kick
 - Event `room.joined` dengan teks `has entered` memicu permintaan `room.participants` otomatis.
-- Checkbox Auto Kick mengirim `room.kick` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
+- Checkbox Auto Kick mengirim `room.kick.vote` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
 - Format payload event upstream dapat berbeda; verifikasi bentuk event dan respons `room.participants` pada log sebelum penggunaan.
 
 
@@ -24,7 +24,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Log ROOM JOIN MATCH mencatat sumber username untuk memudahkan diagnosis.
 
 
-## Metode kick (`room.kick`)
-- Tombol moderasi dan Auto Kick mengirim payload `{"type":"room.kick","room":"nama-room","target_username":"username"}`.
-- `room.kick` dapat diproses sebagai vote-kick; respons queued bukan bukti bahwa target berhasil dikeluarkan. Periksa hasil job dan nilai `result.status` / `kicked`.
+## Metode kick percobaan (`room.kick.vote`)
+- Tombol moderasi dan Auto Kick mengirim payload `{"type":"room.kick.vote","room":"nama-room","target_username":"username"}`.
+- `room.kick.vote` belum terkonfirmasi didukung dokumentasi; jika server mengembalikan `unsupported_type`, tipe ini tidak didukung. Jangan anggap queued sebagai bukti kick berhasil; respons queued bukan bukti bahwa target berhasil dikeluarkan. Periksa hasil job dan nilai `result.status` / `kicked`.
 - Jika server menolak karena kredit tidak cukup, aplikasi tidak melewati pemeriksaan kredit.
