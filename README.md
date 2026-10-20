@@ -29,3 +29,8 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Backend mengizinkan `room.send_message` pada proxy.
 - Aplikasi hanya mengirim teks perintah; server upstream harus mendukung `/kick` dan mengizinkannya untuk moderator. Keberhasilan tidak dijamin sampai respons/event server mengonfirmasi.
 - Jalur JSON `room.kick` tidak lagi dipakai oleh tombol kick maupun Auto Kick.
+
+
+## Catatan `room.kick.state` (eksperimental)
+
+Tombol Kick dan Auto Kick sekarang mengirim payload `{"type":"room.kick.state","room":"nama-room","target_username":"username"}`. Tipe `room.kick.state` belum tercantum dalam dokumentasi publik API yang diperiksa; implementasi ini hanya mengirim tipe yang diminta dan tidak menjamin server mengenalinya. Periksa respons upstream untuk mengetahui apakah diterima atau ditolak.
