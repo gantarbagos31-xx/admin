@@ -14,7 +14,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 
 ## Perubahan auto-refresh dan Auto Kick
 - Event `room.joined` dengan teks `has entered` memicu permintaan `room.participants` otomatis.
-- Checkbox Auto Kick mengirim `room.kick.vote` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
+- Event `room.joined` memicu refresh daftar peserta; auto-kick hanya memproses username yang terdeteksi cocok dengan keluarga pola dinamis di List Target.
 - Format payload event upstream dapat berbeda; verifikasi bentuk event dan respons `room.participants` pada log sebelum penggunaan.
 
 
@@ -24,14 +24,21 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Log ROOM JOIN MATCH mencatat sumber username untuk memudahkan diagnosis.
 
 
-## Metode kick percobaan (`room.kick.vote`)
-- Tombol moderasi dan Auto Kick mengirim payload `{"type":"room.kick.vote","room":"nama-room","target_username":"username"}`.
-- `room.kick.vote` belum terkonfirmasi didukung dokumentasi; jika server mengembalikan `unsupported_type`, tipe ini tidak didukung. Jangan anggap queued sebagai bukti kick berhasil; respons queued bukan bukti bahwa target berhasil dikeluarkan. Periksa hasil job dan nilai `result.status` / `kicked`.
-- Jika server menolak karena kredit tidak cukup, aplikasi tidak melewati pemeriksaan kredit.
-
+## Metode kick melalui sendtext `/kick username`
+- Tombol moderasi dan Auto Kick mengirim payload `{"type":"room.send_message","room":"nama-room","message":"/kick username"}`.
+- Pesan teks yang terkirim bukan bukti target berhasil dikeluarkan; target hanya dihapus setelah respons/peristiwa mengonfirmasi kick berhasil.
+- Command `/kick username` harus didukung server room dan akun harus memiliki izin mengirim pesan serta hak moderator yang sesuai. API/server dapat menolak command tersebut.
+- Auto Kick memproses satu target setiap sekitar satu detik dan tidak menggunakan `room.kick.vote`.
 
 ## Perbaikan koneksi upstream (2026-10-20)
 - Endpoint ditetapkan ke `wss://developer.mig33.id/developer/ws` dan subprotokol `mig33.developer.ws.v1`.
 - Proxy mengirim status connecting/open/closed/reconnecting ke frontend.
 - Jika koneksi upstream putus atau timeout, proxy mencoba menyambung ulang dengan jeda bertahap.
 - Perintah tidak dikirim diam-diam ketika upstream offline; log akan menjelaskan agar tombol ditekan ulang setelah status tersambung.
+
+## Deteksi keluarga username dan auto-kick
+- Deteksi tidak memakai daftar contoh username yang dikunci. Nama yang mengandung angka dikelompokkan berdasarkan pola setelah rangkaian angka dinormalisasi (mis. `alpha1`, `alpha2`; `group-01-x`, `group-02-x`).
+- Kelompok minimal dua username dengan pola normalisasi yang sama dipindahkan ke Target; nama dasar tanpa angka juga disertakan bila cocok dengan prefix keluarga tersebut.
+- Auto Kick aktif secara default dan mengirim teks `/kick username` lewat `room.send_message`, satu target per detik. Tidak ada konfirmasi manual pada setiap target; server tetap memeriksa dukungan command dan hak moderator.
+- Target tetap berada di daftar sampai aplikasi menerima indikator konfirmasi kick; pengiriman teks saja tidak dianggap sukses.
+- Pengiriman command membutuhkan permission `messaging.send`; keberhasilan tetap bergantung pada dukungan command `/kick` dan hak moderator yang berlaku di server.
