@@ -16,3 +16,9 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Event `room.joined` dengan teks `has entered` memicu permintaan `room.participants` otomatis.
 - Checkbox Auto Kick mengirim `room.kick` untuk username yang diekstrak dari event tanpa memeriksa daftar TARGET. Permission `rooms.kick` tetap wajib tersedia.
 - Format payload event upstream dapat berbeda; verifikasi bentuk event dan respons `room.participants` pada log sebelum penggunaan.
+
+
+## Perbaikan ekstraksi username (2026-10-20)
+- Auto Kick mengambil username dari `data.username` pada event `room.text` / `room.joined` terlebih dahulu (contoh: `rockgan`).
+- Parser teks `has entered` tetap menjadi fallback bila field username tidak tersedia.
+- Log ROOM JOIN MATCH mencatat sumber username untuk memudahkan diagnosis.
