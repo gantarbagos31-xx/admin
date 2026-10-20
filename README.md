@@ -22,3 +22,10 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Auto Kick mengambil username dari `data.username` pada event `room.text` / `room.joined` terlebih dahulu (contoh: `rockgan`).
 - Parser teks `has entered` tetap menjadi fallback bila field username tidak tersedia.
 - Log ROOM JOIN MATCH mencatat sumber username untuk memudahkan diagnosis.
+
+
+## Metode kick teks (/kick username)
+- Tombol moderasi dan Auto Kick mengirim `room.send_message` dengan `message: "/kick username"` ke room aktif.
+- Backend mengizinkan `room.send_message` pada proxy.
+- Aplikasi hanya mengirim teks perintah; server upstream harus mendukung `/kick` dan mengizinkannya untuk moderator. Keberhasilan tidak dijamin sampai respons/event server mengonfirmasi.
+- Jalur JSON `room.kick` tidak lagi dipakai oleh tombol kick maupun Auto Kick.
