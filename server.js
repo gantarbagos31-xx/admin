@@ -43,12 +43,12 @@ wss.on('connection',client=>{
  const connectUpstream=()=>{
    if(clientClosed||client.readyState!==WebSocket.OPEN)return;
    clearTimers(); opened=false; const generation=++upstreamGeneration;
-   toClient({type:'proxy.status',status:'connecting',endpoint:UPSTREAM,message_format:UPSTREAM_PROTOCOL,subprotocol_negotiation:false});
-   try{up=new WebSocket(UPSTREAM,{handshakeTimeout:12000});}
+   toClient({type:'proxy.status',status:'connecting',endpoint:UPSTREAM,message_format:UPSTREAM_PROTOCOL,subprotocol_requested:true,subprotocol:UPSTREAM_PROTOCOL,subprotocol_negotiation:'requested; server selection will be reported after handshake'});
+   try{up=new WebSocket(UPSTREAM,{handshakeTimeout:12000,headers:{'Sec-WebSocket-Protocol':UPSTREAM_PROTOCOL}});}
    catch(e){toClient({type:'proxy.error',message:'Gagal membuat koneksi upstream: '+String(e.message||e)});scheduleReconnect();return;}
    const current=up;
    connectTimer=setTimeout(()=>{if(!clientClosed&&up===current&&current.readyState===WebSocket.CONNECTING){toClient({type:'proxy.error',message:'Timeout 12 detik saat menghubungkan upstream '+UPSTREAM});try{current.terminate();}catch{}}},13000);
-   current.on('open',()=>{if(generation!==upstreamGeneration||clientClosed){try{current.close();}catch{}return;}if(connectTimer){clearTimeout(connectTimer);connectTimer=null;}opened=true;retryDelay=1500;toClient({type:'proxy.status',status:'upstream-open',endpoint:UPSTREAM,message_format:UPSTREAM_PROTOCOL,subprotocol_negotiation:false});});
+   current.on('open',()=>{if(generation!==upstreamGeneration||clientClosed){try{current.close();}catch{}return;}if(connectTimer){clearTimeout(connectTimer);connectTimer=null;}opened=true;retryDelay=1500;toClient({type:'proxy.status',status:'upstream-open',endpoint:UPSTREAM,message_format:UPSTREAM_PROTOCOL,subprotocol_requested:true,subprotocol:UPSTREAM_PROTOCOL,server_selected_subprotocol:current.protocol||null,subprotocol_negotiated:current.protocol===UPSTREAM_PROTOCOL});});
    current.on('message',raw=>{let d;try{d=JSON.parse(raw.toString());}catch{d={raw:raw.toString()};}audit('incoming',d);toClient({type:'upstream.message',data:d});});
    current.on('error',e=>{toClient({type:'proxy.error',message:'Upstream WebSocket error ('+UPSTREAM+'): '+String(e.message||'unknown')});});
    current.on('close',(code,reason)=>{if(connectTimer){clearTimeout(connectTimer);connectTimer=null;}if(up===current)opened=false;toClient({type:'proxy.status',status:'upstream-closed',endpoint:UPSTREAM,code,reason:reason.toString()});if(up===current)up=null;scheduleReconnect();});
