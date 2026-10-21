@@ -8,7 +8,7 @@ Backend Node.js dan frontend HTML sudah digabung dalam `server.js`.
 3. Jalankan `npm install`, lalu `npm start`.
 4. Buka `http://IP-SERVER:3000` di Chrome Android. Di perangkat yang sama dengan Node.js, gunakan `http://127.0.0.1:3000`.
 
-Endpoint upstream mengikuti dokumentasi Mig33: `wss://developer.mig33.id/developer/ws`. Subprotokol yang dikirim saat handshake adalah `mig33.developer.ws.v1`. URL endpoint dan subprotokol berbeda; jangan mengisi URL dengan nama subprotokol. Port dapat diatur dengan environment variable `PORT`.
+Endpoint upstream mengikuti dokumentasi Mig33: `wss://api.mig33.id/ws`. Subprotokol yang dikirim saat handshake adalah `mig33.developer.ws.v1`. URL endpoint dan subprotokol berbeda; jangan mengisi URL dengan nama subprotokol. Port dapat diatur dengan environment variable `PORT`.
 
 Daftar peserta bergantung pada format respons API upstream; protokol upstream belum diuji langsung. Gunakan HTTPS/WSS bila dipublikasikan melalui internet.
 
@@ -31,7 +31,7 @@ Daftar peserta bergantung pada format respons API upstream; protokol upstream be
 - Auto Kick memproses satu target setiap sekitar satu detik dan tidak menggunakan `room.kick.vote`.
 
 ## Perbaikan koneksi upstream (2026-10-20)
-- Endpoint ditetapkan ke `wss://developer.mig33.id/developer/ws` dan subprotokol `mig33.developer.ws.v1`.
+- Endpoint ditetapkan ke `wss://api.mig33.id/ws` dan subprotokol `mig33.developer.ws.v1`.
 - Proxy mengirim status connecting/open/closed/reconnecting ke frontend.
 - Jika koneksi upstream putus atau timeout, proxy mencoba menyambung ulang dengan jeda bertahap.
 - Perintah tidak dikirim diam-diam ketika upstream offline; log akan menjelaskan agar tombol ditekan ulang setelah status tersambung.
