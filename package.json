@@ -1,16 +1,13 @@
 {
-  "name": "mig33reborn-room-moderator-single",
-  "version": "1.1.0",
+  "name": "mig33-wss-example",
+  "version": "1.0.0",
   "private": true,
-  "description": "Single-file Node.js app with embedded HTML frontend and WebSocket proxy",
-  "main": "server.js",
+  "description": "Contoh konfigurasi dan koneksi WebSocket berdasarkan endpoint pada screenshot",
+  "main": "wss.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node wss.js"
   },
   "dependencies": {
     "ws": "^8.18.0"
-  },
-  "engines": {
-    "node": ">=18"
   }
 }
